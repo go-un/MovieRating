@@ -9,3 +9,15 @@
   font-weight: 700;
   color: white;
 }
+
+.orange {
+  color: orange;
+}
+
+.purple {
+  color: purple;
+}
+
+.clickable {
+  cursor: pointer;
+}

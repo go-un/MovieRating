@@ -1,35 +1,80 @@
-import React, {Fragment} from 'react';
+import React, {Fragment, Component} from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faKissWinkHeart, faStar, faStarHalfAlt } from '@fortawesome/free-solid-svg-icons';
+import { faKissWinkHeart, faStar, faUserFriends } from '@fortawesome/free-solid-svg-icons';
 
-function MovieDetail(props) {
+class MovieDetail extends Component {
 
-  return (
-  <Fragment>
-    { props.movie ?
-      (
-      <div>
-        <h2>Movie "{props.movie.Title}" Detail <FontAwesomeIcon icon={faKissWinkHeart} /></h2>
-        <img src={props.movie.Poster} alt={props.movie.Title} />
-        <div>runtime: {props.movie.Runtime}</div>
-        <div>genre: {props.movie.Genre}</div>
-        <div>actors: {props.movie.Actors}</div>
-        <div>director: {props.movie.Director}</div>
-        <div>released: {props.movie.Released}</div>
-        <div>IMDB rating:
-          <FontAwesomeIcon icon={props.movie.imdbRating >= 2 ? faStar : props.movie.imdbRating > 0 ? faStarHalfAlt : ''} />
-          <FontAwesomeIcon icon={props.movie.imdbRating >= 4 ? faStar : faStarHalfAlt} />
-          <FontAwesomeIcon icon={props.movie.imdbRating >= 6 ? faStar : faStarHalfAlt} />
-          <FontAwesomeIcon icon={props.movie.imdbRating >= 8 ? faStar : faStarHalfAlt} />
-          <FontAwesomeIcon icon={props.movie.imdbRating >= 10 ? faStar : faStarHalfAlt} />
-          ( { props.movie.imdbRating } )
-        </div>
-        <div>IMDB votes: {props.movie.imdbVotes}</div>
-      </div>
-      ) : ''
+  constructor(){
+    super();
+    this.state = {
+        hightlighted: -1
     }
-  </Fragment>
-  )
+  }
+
+  highlightRate = high => {
+    this.setState({highlighted: high});
+  }
+
+  /* Post data */
+  postRate = rate => {
+    fetch(`${process.env.REACT_APP_API_URL}/api/movies/${this.props.movie.id}/rate_movie/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+        'Authorization': 'Token ce28138ce1d4c352ee157087bcdc4b341b4a30b8'
+      },
+      body: JSON.stringify({
+        'stars': rate
+      })
+    })
+    .then( response => response.json())
+    .then( () => this.getDetail())
+    .catch( error => console.log(error));
+  }
+
+  getDetail = () => {
+    fetch(`${process.env.REACT_APP_API_URL}/api/movies/${this.props.movie.id}/`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+        'Authorization': 'Token ce28138ce1d4c352ee157087bcdc4b341b4a30b8'
+      }
+    })
+    .then( response => response.json())
+    .then( result => this.props.updateMovie(result))
+    .catch( error => console.log(error));    
+  }
+
+  render(){
+    return (
+      <Fragment>
+        { this.props.movie ?
+          (
+          <div>
+            <h2>About {this.props.movie.title} <FontAwesomeIcon icon={faKissWinkHeart} /></h2>
+            <div>{this.props.movie.description}</div>
+            <div>
+              {
+                [...Array(5)].map( (event, index) => <FontAwesomeIcon icon={faStar} key={index} className={ (this.props.movie.avg_ratings > index) ? "orange" : ""} />)
+              }
+              (<FontAwesomeIcon icon={faUserFriends} /> {this.props.movie.no_of_ratings})
+            </div>
+            <div>{this.props.movie.avg_ratings}</div>
+    
+            <div>
+              <h3>Rate it yourself</h3>
+              <div className="clickable">
+              {
+                [...Array(5)].map( (item, index) => <FontAwesomeIcon icon={faStar} key={index} className={ (this.state.highlighted > index - 1) ? "purple" : ""} onClick={() => this.postRate(index + 1)} onMouseEnter={() => this.highlightRate(index)} onMouseLeave={() => this.highlightRate(index)} />)
+              }
+              </div>
+            </div>
+          </div>
+          ) : ''
+        }
+      </Fragment>
+      )
+  }
 }
 
 export default MovieDetail;

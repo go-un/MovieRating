@@ -12,8 +12,8 @@ function MovieList(props) {
         {
           props.movies ? (
             <ul>
-              { props.movies.Search.map(movie => {
-                return <li key={movie.imdbID} onClick={ () => movieClicked(movie)}> <MovieCard movie={movie}/> </li>
+              { props.movies.map(movie => {
+                return <li key={movie.id} onClick={ () => movieClicked(movie)}> <MovieCard movie={movie}/> </li>
               })}
             </ul>
           ) : ''
