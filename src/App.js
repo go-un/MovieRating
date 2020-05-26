@@ -3,6 +3,7 @@ import './App.css';
 import './components/movie-list';
 import MovieList from './components/movie-list';
 import MovieDetail from './components/movie-detail';
+import MovieForm from './components/movie-form';
 
 class App extends Component {
   constructor(){
@@ -13,12 +14,8 @@ class App extends Component {
     }
   }
 
-  componentDidMount() {
-    this.loadMovies();
-  }
-
   /* Get Movies */
-  loadMovies = () => {
+  componentDidMount() {
     fetch(`${process.env.REACT_APP_API_URL}/api/movies/`, {
       method: 'GET',
       headers: {
@@ -28,11 +25,6 @@ class App extends Component {
     .then( response => response.json())
     .then( result => this.setState({movies: result}))
     .catch( error => console.log(error));
-  }
-
-  /* Set Selected Movie */
-  loadMovie = movie => {
-    this.setState({selectedMovie: movie});
   }
 
   /* Delete Movie */
@@ -51,12 +43,37 @@ class App extends Component {
     .catch( error => console.log(error) );
   }
 
+  /* Load selected movie */
+  loadMovie = lMovie => {
+    const tmpMovies = this.state.movies.map( movie => {
+      if(movie.id === lMovie.id) {
+        return lMovie
+      } else {
+        return movie
+      }
+    });
+    this.setState({movies: tmpMovies, selectedMovie: lMovie, editedMovie: null});
+  }
+
+  /* Edit Movie */
+  editMovie = lMovie => {
+    const tmpMovies = this.state.movies.map( movie => {
+      if(movie.id === lMovie.id) {
+        return lMovie
+      } else {
+        return movie
+      }
+    });
+    this.setState({movies: tmpMovies, editedMovie: lMovie, selectedMovie: null});
+  }
+
   render() {
     return (
       <div className="App">
         <h1>Movie Rater</h1>
-        <MovieList movies={this.state.movies} movieClicked={this.loadMovie} movieDeleted={this.removeMovie}/>
-        <MovieDetail movie={this.state.selectedMovie} updateMovie={this.loadMovie}/>
+        {this.state.movies ? <MovieList movies={this.state.movies} movieClicked={this.loadMovie} movieDeleted={this.removeMovie} movieEdited={this.editMovie}/> : 'loading movies...'}
+        {this.state.selectedMovie ? <MovieDetail movie={this.state.selectedMovie} updateMovie={this.loadMovie}/> : ''}
+        {this.state.editedMovie ? <MovieForm movie={this.state.editedMovie} updateMovie={this.editMovie}/> : ''}
       </div>
     )
   }

@@ -1,4 +1,4 @@
-import React, {Fragment, Component} from 'react';
+import React, {Component} from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faKissWinkHeart, faStar, faUserFriends } from '@fortawesome/free-solid-svg-icons';
 
@@ -47,33 +47,27 @@ class MovieDetail extends Component {
 
   render(){
     return (
-      <Fragment>
-        { this.props.movie ?
-          (
-          <div>
-            <h2>About {this.props.movie.title} <FontAwesomeIcon icon={faKissWinkHeart} /></h2>
-            <div>{this.props.movie.description}</div>
-            <div>
-              {
-                [...Array(5)].map( (event, index) => <FontAwesomeIcon icon={faStar} key={index} className={ (this.props.movie.avg_ratings > index) ? "orange" : ""} />)
-              }
-              (<FontAwesomeIcon icon={faUserFriends} /> {this.props.movie.no_of_ratings})
-            </div>
-            <div>{this.props.movie.avg_ratings}</div>
-    
-            <div>
-              <h3>Rate it yourself</h3>
-              <div className="clickable">
-              {
-                [...Array(5)].map( (item, index) => <FontAwesomeIcon icon={faStar} key={index} className={ (this.state.highlighted > index - 1) ? "purple" : ""} onClick={() => this.postRate(index + 1)} onMouseEnter={() => this.highlightRate(index)} onMouseLeave={() => this.highlightRate(index)} />)
-              }
-              </div>
-            </div>
+      <div>
+        <h2>About {this.props.movie.title} <FontAwesomeIcon icon={faKissWinkHeart} /></h2>
+        <div>{this.props.movie.description}</div>
+        <div>
+          {
+            [...Array(5)].map( (event, index) => <FontAwesomeIcon icon={faStar} key={index} className={ (this.props.movie.avg_ratings > index) ? "orange" : ""} />)
+          }
+          (<FontAwesomeIcon icon={faUserFriends} /> {this.props.movie.no_of_ratings})
+        </div>
+        <div>{this.props.movie.avg_ratings}</div>
+
+        <div>
+          <h3>Rate it yourself</h3>
+          <div className="clickable">
+          {
+            [...Array(5)].map( (item, index) => <FontAwesomeIcon icon={faStar} key={index} className={ (this.state.highlighted > index - 1) ? "purple" : ""} onClick={() => this.postRate(index + 1)} onMouseEnter={() => this.highlightRate(index)} onMouseLeave={() => this.highlightRate(index)} />)
+          }
           </div>
-          ) : ''
-        }
-      </Fragment>
-      )
+        </div>
+      </div>
+    )
   }
 }
 
