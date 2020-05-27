@@ -23,6 +23,7 @@ function MovieList(props) {
           </li>
         })}
       </ul>
+      <button onClick={() => props.movieAdded({})}>Add New Movie</button>
     </div>
   )
 }

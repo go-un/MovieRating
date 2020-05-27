@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 
-class MovieForm extends Component {
+class MovieFormEdit extends Component {
   state = {
     editedMovie: this.props.movie
   }
@@ -13,10 +13,7 @@ class MovieForm extends Component {
         'Content-Type': 'application/json; charset=utf-8',
         'Authorization': 'Token ce28138ce1d4c352ee157087bcdc4b341b4a30b8'
       },
-      body: JSON.stringify({
-        'title': movie.title,
-        'description': movie.description
-      })
+      body: JSON.stringify(this.state.editedMovie)
     })
     .then( response => response.json())
     .then( result => this.props.updateMovie(result))
@@ -48,4 +45,4 @@ class MovieForm extends Component {
   }
 }
 
-export default MovieForm;
+export default MovieFormEdit;

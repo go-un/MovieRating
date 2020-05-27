@@ -3,7 +3,8 @@ import './App.css';
 import './components/movie-list';
 import MovieList from './components/movie-list';
 import MovieDetail from './components/movie-detail';
-import MovieForm from './components/movie-form';
+import MovieFormEdit from './components/movie-form-edit';
+import MovieFormAdd from './components/movie-form-add';
 
 class App extends Component {
   constructor(){
@@ -11,7 +12,8 @@ class App extends Component {
     this.state = {
         movies: null,
         selectedMovie: null,
-        editedMovie: null
+        editedMovie: null,
+        addedMovie: false
     }
   }
 
@@ -53,7 +55,7 @@ class App extends Component {
         return movie
       }
     });
-    this.setState({movies: tmpMovies, selectedMovie: lMovie, editedMovie: null});
+    this.setState({movies: tmpMovies, selectedMovie: lMovie, editedMovie: null, addedMovie: false});
   }
 
   /* Edit Movie */
@@ -65,16 +67,32 @@ class App extends Component {
         return movie
       }
     });
-    this.setState({movies: tmpMovies, selectedMovie: null, editedMovie: lMovie});
+    this.setState({movies: tmpMovies, selectedMovie: null, editedMovie: lMovie, addedMovie: false});
+  }
+
+  /* Add Movie */
+  addMovie = () => {
+    this.setState({selectedMovie: null, editedMovie: null, addedMovie: true})
+  }
+
+  addedMovie = movie => {
+    const tmpMovies = [...this.state.movies, movie];
+    this.setState({movies: tmpMovies, addedMovie: false})
+  }
+
+  /* Cancle Adding */
+  cancleAdd = () => {
+    this.setState({addedMovie: false})
   }
 
   render() {
     return (
       <div className="App">
         <h1>Movie Rater</h1>
-        {this.state.movies ? <MovieList movies={this.state.movies} movieClicked={this.loadMovie} movieDeleted={this.removeMovie} movieEdited={this.editMovie}/> : 'loading movies...'}
+        {this.state.movies ? <MovieList movies={this.state.movies} movieClicked={this.loadMovie} movieDeleted={this.removeMovie} movieEdited={this.editMovie} movieAdded={this.addMovie} /> : 'loading movies...'}
         {this.state.selectedMovie ? <MovieDetail movie={this.state.selectedMovie} updateMovie={this.loadMovie}/> : ''}
-        {this.state.editedMovie ? <MovieForm movie={this.state.editedMovie} updateMovie={this.editMovie} cancleEdit={this.loadMovie}/> : ''}
+        {this.state.editedMovie ? <MovieFormEdit movie={this.state.editedMovie} updateMovie={this.editMovie} cancleEdit={this.loadMovie}/> : ''}
+        {this.state.addedMovie ? <MovieFormAdd updateMovie={this.addedMovie} cancleAdd={this.cancleAdd}/> : ''}
       </div>
     )
   }
