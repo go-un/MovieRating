@@ -10,7 +10,8 @@ class App extends Component {
     super();
     this.state = {
         movies: null,
-        selectedMovie: null
+        selectedMovie: null,
+        editedMovie: null
     }
   }
 
@@ -64,7 +65,7 @@ class App extends Component {
         return movie
       }
     });
-    this.setState({movies: tmpMovies, editedMovie: lMovie, selectedMovie: null});
+    this.setState({movies: tmpMovies, selectedMovie: null, editedMovie: lMovie});
   }
 
   render() {
@@ -73,7 +74,7 @@ class App extends Component {
         <h1>Movie Rater</h1>
         {this.state.movies ? <MovieList movies={this.state.movies} movieClicked={this.loadMovie} movieDeleted={this.removeMovie} movieEdited={this.editMovie}/> : 'loading movies...'}
         {this.state.selectedMovie ? <MovieDetail movie={this.state.selectedMovie} updateMovie={this.loadMovie}/> : ''}
-        {this.state.editedMovie ? <MovieForm movie={this.state.editedMovie} updateMovie={this.editMovie}/> : ''}
+        {this.state.editedMovie ? <MovieForm movie={this.state.editedMovie} updateMovie={this.editMovie} cancleEdit={this.loadMovie}/> : ''}
       </div>
     )
   }

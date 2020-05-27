@@ -12,7 +12,9 @@ function MovieList(props) {
         { props.movies.map(movie => {
           return <li key={movie.id}> 
             <MovieCard movie={movie} movieClicked={ () => props.movieClicked(movie)}/>
-            <button onClick={ () => props.movieEdited(movie)}>
+            <button onClick={ () => {
+              props.movieEdited(movie);
+            }}>
               <FontAwesomeIcon icon={faEdit} />
             </button>
             <button onClick={ () => props.movieDeleted(movie)}>

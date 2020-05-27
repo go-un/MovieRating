@@ -1,16 +1,12 @@
 import React, {Component} from 'react';
 
 class MovieForm extends Component {
-  constructor(){
-    super();
-    this.state = {
-      title: null,
-      description: null
-    }
+  state = {
+    editedMovie: this.props.movie
   }
 
-  /* Post data */
-  postMovie = movie => {
+  saveClicked = movie => {
+    /* Post data */
     fetch(`${process.env.REACT_APP_API_URL}/api/movies/${this.props.movie.id}/`, {
       method: 'PUT',
       headers: {
@@ -27,20 +23,26 @@ class MovieForm extends Component {
     .catch( error => console.log(error));
   }
 
+  cancleClicked = movie => {
+    this.props.cancleEdit(movie);
+  }
+
+  onInputChange = event => {
+    let movie = this.state.editedMovie;
+    movie[event.target.name] = event.target.value;
+    this.setState({editedMovie: movie});
+  }
+
   render(){
     return (
       <div>
         <h2>Edit Movie Information</h2>
           <div>Title :</div>
-          <input placeholder={this.props.movie.title} type="text" onChange={ event => this.setState({title: event.target.value})} />
+          <input placeholder={this.props.movie.title} type="text" name="title" onChange={ event => this.onInputChange(event) } />
           <div>description :</div>
-          <textarea placeholder={this.props.movie.description} onChange={ event => this.setState({description: event.target.value})} />
-          <button onClick={() => {
-            const tmpMovie = this.props.movie;
-            tmpMovie.title = this.state.title;
-            tmpMovie.description = this.state.description;
-            this.postMovie(tmpMovie);
-          }}>Save</button>
+          <textarea placeholder={this.props.movie.description} name="description" onChange={ event => this.onInputChange(event) } />
+          <button onClick={() => this.saveClicked(this.state.editedMovie)}>Save</button>
+          <button onClick={() => this.cancleClicked(this.props.movie)}>Cancle</button>
       </div>
     )
   }
