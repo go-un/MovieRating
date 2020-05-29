@@ -2,16 +2,17 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './reset.css';
 import App from './App';
+import Login from './components/login';
 import * as serviceWorker from './serviceWorker';
 import { Route, BrowserRouter } from 'react-router-dom';
-import Login from './components/login';
+import { CookiesProvider } from 'react-cookie';
 
 const routing = (
   <BrowserRouter>
-    <div>
+    <CookiesProvider>
       <Route exact path="/" component={Login} />
       <Route exact path="/movies" component={App} />
-    </div>
+    </CookiesProvider>
   </BrowserRouter>
 )
 

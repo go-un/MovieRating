@@ -1,33 +1,35 @@
 import React, {Component} from 'react';
+import { withCookies } from 'react-cookie';
 import './App.css';
-import './components/movie-list';
 import MovieList from './components/movie-list';
 import MovieDetail from './components/movie-detail';
 import MovieFormEdit from './components/movie-form-edit';
 import MovieFormAdd from './components/movie-form-add';
 
 class App extends Component {
-  constructor(){
-    super();
-    this.state = {
-        movies: null,
-        selectedMovie: null,
-        editedMovie: null,
-        addedMovie: false
-    }
+  state = {
+    movies: null,
+    selectedMovie: null,
+    editedMovie: null,
+    addedMovie: false,
+    token: this.props.cookies.get('mr-token')
   }
 
   /* Get Movies */
   componentDidMount() {
-    fetch(`${process.env.REACT_APP_API_URL}/api/movies/`, {
-      method: 'GET',
-      headers: {
-        'Authorization': 'Token ce28138ce1d4c352ee157087bcdc4b341b4a30b8'
-      }
-    })
-    .then( response => response.json())
-    .then( result => this.setState({movies: result}))
-    .catch( error => console.log(error));
+    if(this.state.token) {
+      fetch(`${process.env.REACT_APP_API_URL}/api/movies/`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Token ${this.state.token}`
+        }
+      })
+      .then( response => response.json())
+      .then( result => this.setState({movies: result}))
+      .catch( error => console.log(error));
+    } else {
+      window.location.href = '/';
+    }
   }
 
   /* Delete Movie */
@@ -35,7 +37,7 @@ class App extends Component {
     fetch(`${process.env.REACT_APP_API_URL}/api/movies/${delMovie.id}/`, {
       method: 'DELETE',
       headers: {
-        'Authorization': 'Token ce28138ce1d4c352ee157087bcdc4b341b4a30b8'
+        'Authorization': `Token ${this.state.token}`
       }
     })
     .then( () => {
@@ -90,12 +92,12 @@ class App extends Component {
       <div className="App">
         <h1>Movie Rater</h1>
         {this.state.movies ? <MovieList movies={this.state.movies} movieClicked={this.loadMovie} movieDeleted={this.removeMovie} movieEdited={this.editMovie} movieAdded={this.addMovie} /> : 'loading movies...'}
-        {this.state.selectedMovie ? <MovieDetail movie={this.state.selectedMovie} updateMovie={this.loadMovie}/> : ''}
-        {this.state.editedMovie ? <MovieFormEdit movie={this.state.editedMovie} updateMovie={this.editMovie} cancleEdit={this.loadMovie}/> : ''}
-        {this.state.addedMovie ? <MovieFormAdd updateMovie={this.addedMovie} cancleAdd={this.cancleAdd}/> : ''}
+        {this.state.selectedMovie ? <MovieDetail movie={this.state.selectedMovie} updateMovie={this.loadMovie} token={this.state.token}/> : ''}
+        {this.state.editedMovie ? <MovieFormEdit movie={this.state.editedMovie} updateMovie={this.editMovie} cancleEdit={this.loadMovie} token={this.state.token}/> : ''}
+        {this.state.addedMovie ? <MovieFormAdd updateMovie={this.addedMovie} cancleAdd={this.cancleAdd} token={this.state.token}/> : ''}
       </div>
     )
   }
 }
 
-export default App;
+export default withCookies(App);

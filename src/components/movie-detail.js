@@ -3,12 +3,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faKissWinkHeart, faStar, faUserFriends } from '@fortawesome/free-solid-svg-icons';
 
 class MovieDetail extends Component {
-
-  constructor(){
-    super();
-    this.state = {
-        hightlighted: -1
-    }
+  state = {
+    hightlighted: -1,
+    token: this.props.token
   }
 
   highlightRate = high => {
@@ -21,7 +18,7 @@ class MovieDetail extends Component {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
-        'Authorization': 'Token ce28138ce1d4c352ee157087bcdc4b341b4a30b8'
+        'Authorization': `Token ${this.state.token}`
       },
       body: JSON.stringify({
         'stars': rate

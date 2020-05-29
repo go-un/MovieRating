@@ -5,7 +5,8 @@ class MovieFormAdd extends Component {
     addedMovie: {
       title: null,
       description: null
-    }
+    },
+    token: this.props.token
   }
 
   onInputChange = event => {
@@ -20,7 +21,7 @@ class MovieFormAdd extends Component {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
-        'Authorization': 'Token ce28138ce1d4c352ee157087bcdc4b341b4a30b8'
+        'Authorization': `Token ${this.state.token}`
       },
       body: JSON.stringify(this.state.addedMovie)
     })

@@ -2,7 +2,8 @@ import React, {Component} from 'react';
 
 class MovieFormEdit extends Component {
   state = {
-    editedMovie: this.props.movie
+    editedMovie: this.props.movie,
+    token: this.props.token
   }
 
   saveClicked = movie => {
@@ -11,7 +12,7 @@ class MovieFormEdit extends Component {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
-        'Authorization': 'Token ce28138ce1d4c352ee157087bcdc4b341b4a30b8'
+        'Authorization': `Token ${this.state.token}`
       },
       body: JSON.stringify(this.state.editedMovie)
     })
