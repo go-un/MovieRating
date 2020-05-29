@@ -34,7 +34,7 @@ class MovieDetail extends Component {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
-        'Authorization': 'Token ce28138ce1d4c352ee157087bcdc4b341b4a30b8'
+        'Authorization': `Token ${this.state.token}`
       }
     })
     .then( response => response.json())
